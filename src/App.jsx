@@ -34,10 +34,28 @@ function App() {
     )
   );
 
-  
+
   return (
-    <>
-    </>
+    <div className="app-container">
+      <header className="header">
+        <div className="header-content">
+          <h1>SysOps Desk</h1>
+          <p>Gestione Asset e Badget IT</p>
+        </div>
+
+        {/* BARRA DI RICERCA */}
+        <div className="search-container">
+          <Search size={20} className="search-icon" color="#64748b" />
+          <input 
+          type="text"
+          placeholder="Cerca matricola, utente, reparto..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+          />
+        </div>
+      </header>
+    </div>
   )
 }
 
