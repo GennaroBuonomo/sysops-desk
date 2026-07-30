@@ -17,6 +17,14 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
+  // 1. NUOVO STATO: Gestione del tema (di base 'light')
+  const [theme, setTheme] = useState('light');
+
+  // Funzione per invertire il tema
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  }
+
   let processedAssets = assets.filter(asset => 
     Object.values(asset).some(value => 
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -41,6 +49,7 @@ function App() {
   };
 
   return (
+    <div data-theme={theme} style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)' }}>
     <div className="app-container">
       <Header 
         searchTerm={searchTerm} 
@@ -54,6 +63,7 @@ function App() {
           onSort={handleSort} 
         />
       </main>
+    </div>
     </div>
   );
 }
