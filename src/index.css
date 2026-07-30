@@ -1,0 +1,155 @@
+/* --- TEMA CLINICAL SaaS (Minimal & Clean) --- */
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --border-color: #e2e8f0;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* --- HEADER E RICERCA --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header h1 {
+  margin: 0 0 8px 0;
+  font-size: 2.2rem;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* --- TABELLA (Flexbox Layout) --- */
+.table-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden; 
+}
+
+/* Gestione larghezze colonne via Flexbox */
+.col { padding: 16px; display: flex; align-items: center; }
+.col.id { flex: 1; min-width: 110px; color: var(--text-muted); }
+.col.device { flex: 2; min-width: 240px; font-weight: 500; }
+.col.assignee { flex: 1.5; min-width: 150px; }
+.col.dept { flex: 1.5; min-width: 150px; color: var(--text-muted); }
+.col.cost { flex: 1; min-width: 100px; font-variant-numeric: tabular-nums; }
+.col.status { flex: 1.5; min-width: 160px; }
+
+/* Sticky Header */
+.table-header {
+  display: flex;
+  background-color: #f1f5f9;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.table-row:hover {
+  background-color: #f8fafc;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+/* --- BADGES E ICONE --- */
+.icon-wrapper {
+  background-color: #f1f5f9;
+  padding: 8px;
+  border-radius: 8px;
+  margin-right: 12px;
+  display: flex;
+  color: var(--text-muted);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.active { background-color: #dcfce7; color: #166534; }
+.status-badge.idle { background-color: #f1f5f9; color: #475569; }
+.status-badge.maintenance { background-color: #fef3c7; color: #92400e; }
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* --- RESPONSIVITÀ (Tablet/Mobile) --- */
+@media (max-width: 900px) {
+  .table-card { overflow-x: auto; }
+  .table-header, .table-row { min-width: 800px; } 
+}
