@@ -23,8 +23,18 @@ const getDeviceIcon = (type) => {
 };
 
 function App() {
-  
+  // ---STATI---
+  const [ assets, setAssets ] = useState(initialAssets);
+  const [ searchTerm, setSearchTerm ] =useState("");
 
+  // ---LOGICA: MOTORE DI RICERCA LIVE ---
+  const filteredAssets = assets.filter(asset => 
+    object.value(asset).some(value => 
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  
   return (
     <>
     </>
