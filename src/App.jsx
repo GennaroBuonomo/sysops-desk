@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Search, Monitor, Server, Smartphone, Laptop } from 'lucide-react';
+import { Search, Monitor, Server, Smartphone, Laptop, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import './App.css';
 
-// 1. DATABASE IT (Simulazione inventario)
+// DATABASE 
 const initialAssets = [
   { id: "LPT-042", type: "Laptop", model: "MacBook Pro 16", assignee: "Mario Rossi", dept: "Sviluppo", cost: 2400, status: "Operativo" },
   { id: "SRV-001", type: "Server", model: "Dell PowerEdge R750", assignee: "IT Ops", dept: "Infrastruttura", cost: 6500, status: "In Manutenzione" },
@@ -11,7 +11,6 @@ const initialAssets = [
   { id: "LPT-043", type: "Laptop", model: "ThinkPad T14", assignee: "Elena Verdi", dept: "Amministrazione", cost: 1350, status: "Operativo" }
 ];
 
-// 2. HELPER: Sceglie l'icona in base al tipo di device
 const getDeviceIcon = (type) => {
   switch(type) {
     case 'Laptop': return <Laptop size={18} />;
@@ -23,16 +22,49 @@ const getDeviceIcon = (type) => {
 };
 
 function App() {
-  // --- STATI ---
   const [assets, setAssets] = useState(initialAssets);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // ---Configurazione Ordinamento ---
+  // Memorizza la chiave (es. 'cost', 'dept') e la direzione ('asc' o 'desc')
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  // --- LOGICA: MOTORE DI RICERCA LIVE ---
-  const filteredAssets = assets.filter(asset => 
+  // 1. FILTRO RICERCA LIVE (eseguito per primo)
+  let processedAssets = assets.filter(asset => 
     Object.values(asset).some(value => 
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  // 2. ORDINAMENTO (eseguito sui risultati filtrati)
+  if (sortConfig.key) {
+    processedAssets.sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  // --- FUNZIONE PER GESTIRE IL CLICK SULLA COLONNA ---
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc'; // Se clicchi di nuovo la stessa colonna, inverte la direzione
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Funzione helper per mostrare l'icona giusta sull'intestazione di colonna
+  const getSortIcon = (columnName) => {
+    if (sortConfig.key !== columnName) return <ChevronsUpDown size={14} className="sort-icon inactive" />;
+    return sortConfig.direction === 'asc' 
+      ? <ChevronUp size={14} className="sort-icon active" /> 
+      : <ChevronDown size={14} className="sort-icon active" />;
+  };
 
   return (
     <div className="app-container">
@@ -42,7 +74,6 @@ function App() {
           <p>Gestione Asset e Budget IT</p>
         </div>
 
-        {/* BARRA DI RICERCA */}
         <div className="search-container">
           <Search size={20} className="search-icon" color="#64748b" />
           <input 
@@ -58,20 +89,31 @@ function App() {
       <main className="dashboard">
         <div className="table-card">
           
-          {/* INTESTAZIONE TABELLA (Sticky Header) */}
+          {/* --- INTESTAZIONE TABELLA CLICCABILE --- */}
           <div className="table-header">
-            <div className="col id">ID Asset</div>
-            <div className="col device">Dispositivo</div>
-            <div className="col assignee">Assegnatario</div>
-            <div className="col dept">Reparto</div>
-            <div className="col cost">Costo</div>
-            <div className="col status">Stato</div>
+            <div className="col id sortable" onClick={() => handleSort('id')}>
+              ID Asset {getSortIcon('id')}
+            </div>
+            <div className="col device sortable" onClick={() => handleSort('model')}>
+              Dispositivo {getSortIcon('model')}
+            </div>
+            <div className="col assignee sortable" onClick={() => handleSort('assignee')}>
+              Assegnatario {getSortIcon('assignee')}
+            </div>
+            <div className="col dept sortable" onClick={() => handleSort('dept')}>
+              Reparto {getSortIcon('dept')}
+            </div>
+            <div className="col cost sortable" onClick={() => handleSort('cost')}>
+              Costo {getSortIcon('cost')}
+            </div>
+            <div className="col status sortable" onClick={() => handleSort('status')}>
+              Stato {getSortIcon('status')}
+            </div>
           </div>
 
-          {/* CORPO TABELLA */}
           <div className="table-body">
-            {filteredAssets.length > 0 ? (
-              filteredAssets.map(asset => (
+            {processedAssets.length > 0 ? (
+              processedAssets.map(asset => (
                 <div key={asset.id} className="table-row">
                   <div className="col id"><strong>{asset.id}</strong></div>
                   <div className="col device">

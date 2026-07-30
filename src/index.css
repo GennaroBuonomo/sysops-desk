@@ -153,3 +153,31 @@ body {
   .table-card { overflow-x: auto; }
   .table-header, .table-row { min-width: 800px; } 
 }
+
+/* --- ORDINAMENTO COLONNE (Sortable Headers) --- */
+.col.sortable {
+  cursor: pointer;
+  user-select: none; /* Evita che il testo si evidenzi quando fai doppio click rapido */
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.col.sortable:hover {
+  color: var(--text-main);
+  background-color: #e2e8f0; 
+}
+
+/* Stile per le icone di ordinamento (le freccette) */
+.sort-icon {
+  margin-left: 6px;
+  transition: color 0.2s;
+}
+
+.sort-icon.inactive {
+  color: #cbd5e1;
+  opacity: 0.5;
+}
+
+.sort-icon.active {
+  color: var(--primary);
+  opacity: 1;
+}
