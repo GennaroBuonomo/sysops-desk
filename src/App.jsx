@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Table from './components/Table';
 import KPICards from './components/KPICards';
+import AssetFormModal from './components/AssetFormModal';
 import './App.css';
 
 const initialAssets = [
@@ -16,8 +17,8 @@ function App() {
   const [assets, setAssets] = useState(initialAssets);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-
   const [theme, setTheme] = useState('light');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
@@ -25,6 +26,11 @@ function App() {
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
+  // 1. LA FUNZIONE PER AGGIUNGERE IL DATO
+  const handleAddAsset = (newAsset) => {
+    setAssets([...assets, newAsset]); // Spread operator per non mutare l'array originale
   };
 
   let processedAssets = assets.filter(asset => 
@@ -55,11 +61,11 @@ function App() {
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
         theme={theme}              
-        toggleTheme={toggleTheme}   
+        toggleTheme={toggleTheme}
+        onOpenModal={() => setIsModalOpen(true)} 
       />
       
       <main className="dashboard">
-
         <KPICards data={processedAssets} />
         
         <Table 
@@ -68,6 +74,12 @@ function App() {
           onSort={handleSort} 
         />
       </main>
+
+      <AssetFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAdd={handleAddAsset} 
+      />
     </div>
   );
 }
