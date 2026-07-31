@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; 
 import Header from './components/Header';
 import Table from './components/Table';
+import KPICards from './components/KPICards';
 import './App.css';
 
 const initialAssets = [
@@ -12,18 +13,19 @@ const initialAssets = [
 ];
 
 function App() {
-
   const [assets, setAssets] = useState(initialAssets);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  // 1. NUOVO STATO: Gestione del tema (di base 'light')
   const [theme, setTheme] = useState('light');
 
-  // Funzione per invertire il tema
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  }
+  };
 
   let processedAssets = assets.filter(asset => 
     Object.values(asset).some(value => 
@@ -31,7 +33,6 @@ function App() {
     )
   );
 
-  // 2. ORDINAMENTO
   if (sortConfig.key) {
     processedAssets.sort((a, b) => {
       if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -49,21 +50,24 @@ function App() {
   };
 
   return (
-    <div data-theme={theme} style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)' }}>
     <div className="app-container">
       <Header 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
+        theme={theme}              
+        toggleTheme={toggleTheme}   
       />
       
       <main className="dashboard">
+
+        <KPICards data={processedAssets} />
+        
         <Table 
           data={processedAssets} 
           sortConfig={sortConfig} 
           onSort={handleSort} 
         />
       </main>
-    </div>
     </div>
   );
 }
